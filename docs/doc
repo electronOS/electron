@@ -1,0 +1,31 @@
+electron is a free and open-source kernel, which is also unlicensed. 
+Run build.sh to build the latest kernel, after making tweaks.
+The main kernel is in source/kernel.c and the boot file is in source/boot.asm. 
+
+COMMANDS
+Priority levels are important for the following table. They are
+_         - Shouldn't be depended on, may be removed. 
+__        - OK to depend on, but not entirely recommended. 
+#         - important!
+*         - very important!
+###***### - isn't an Electron OS without it.
+
+K - print kernel info        ###***###
+H - help                     ###***###
+A - about info               __
+
+Any other commands are likely modules, and are not built it. (exception: A)
+
+LICENSE
+THIS KERNEL IS IN THE PUBLIC DOMAIN. YOU ARE NOT ALLOWED TO PUT IT UNDER ANY LICENSE IN ANY WAY. WARRANTIES HOWEVER, ARE ALLOWED. 
+
+DEVELOPERS
+ANYONE CAN CONTRIBUTE TO ELECTRON. YOU ARE FREE TO DO WHAT YOU WISH WITH IT. IT IS RECOMMENDED TO SHARE YOUR CHANGES THROUGH THE OFFICIAL GITHUB, BUT THIS IS NOT REQUIRED. 
+
+WHO, WHAT, WHEN
+electron was created by iH8Ra1n in 2018. It is a free and open source kernel, which is also unlicensed. 
+
+SYSCALLS
+SET_ALIVE(i); set ALIVE to i. (shutdown if not 0)
+add_module(int port, inptr ptr); add kernel module. ptr is a pointer to a function. 
+run_module(int port, int i); launch kernel module at port, pass argument i. 
