@@ -29,3 +29,12 @@ SYSCALLS
 SET_ALIVE(i); set ALIVE to i. (shutdown if not 0)
 add_module(int port, inptr ptr); add kernel module. ptr is a pointer to a function. 
 run_module(int port, int i); launch kernel module at port, pass argument i. 
+
+STANDARD
+ALL modules have to set mod_success to 1 upon succeeding, for electron to know it exited correctly. 
+void functions do not look like this:
+void func(void){};
+void functions look like this:
+void func(){};
+(arguments are fine)
+

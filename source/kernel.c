@@ -18,32 +18,32 @@
 
 #define ENTER_KEY 0x1C
 
-extern unsigned char keyboard[128];
-extern void HANDLE_KEY_ASM();
-extern char RTP(unsigned short port);
-extern void WTP(unsigned short port, unsigned char data);
-extern void IDT_LOAD(unsigned long *iptr);
+extern unsigned char keyboard[128]; // keyboard map
+extern void HANDLE_KEY_ASM(); // assembly key handler
+extern char RTP(unsigned short port); // read port
+extern void WTP(unsigned short port, unsigned char data); // write port
+extern void IDT_LOAD(unsigned long *iptr); // load it
 
 unsigned int location = 0; // Cursor location
 char *video = (char*) 0xb8000; // video memory begins at address 0xb8000
-int ALIVE;
-int mod_success;
+int ALIVE; // if machine is alive
+int mod_success; // module success
 
-typedef (*inptr)(int);
-inptr modules[16384];
+typedef (*inptr)(int); // for modules
+inptr modules[16384]; // modules
 
-int is_mod_count;
-int is_mod[16384];
+int is_mod_count; // count
+int is_mod[16384]; // for modules
 
 void add_module(int port, inptr ptr) {
-	modules[port]=ptr;
-	is_mod[is_mod_count]=port;
-	is_mod_count++;
+	modules[port]=ptr; // assign
+	is_mod[is_mod_count]=port; // assign
+	is_mod_count++; // increment counter
 	return;
 };
 
 void run_module(int port, int i) {
-	(*modules[port])(i);
+	(*modules[port])(i); // execute module
 	return;
 };
 
@@ -114,68 +114,67 @@ void KEYBOARD_INIT() {
 }
 
 void printf(const char *s) {
-	unsigned int COUNT = 0;
+	unsigned int COUNT = 0; // counter
 	while (s[COUNT] != '\0') {
 		if (s[COUNT] == '\n') {
-			NEWLINE();
-			COUNT++;
+			NEWLINE(); // newline
+			COUNT++; // increment
 		};
-		video[location++] = s[COUNT++];
-		video[location++] = 0x07;
+		video[location++] = s[COUNT++]; // place character
+		video[location++] = 0x07; // place attributes
 	}
 	return;
 }
 
 void NEWLINE() {
-	unsigned int line_size = BYTES_PER_ELEMENT * COLUMN;
-	location = location + (line_size - location % (line_size));
+	unsigned int line_size = BYTES_PER_ELEMENT * COLUMN; // calculate linesize
+	location = location + (line_size - location % (line_size)); // increment line
 	return;
 }
 
 void clear_screen() {
-	unsigned int COUNT = 0;
+	unsigned int COUNT = 0; // counter
 	while (COUNT < SCREEN) {
-		video[COUNT++] = ' ';
-		video[COUNT++] = 0x07;
+		video[COUNT++] = ' '; // clear
+		video[COUNT++] = 0x07; // attribute
 	}
 	return;
 }
 
-int DUMMY(){};
+int DUMMY(){}; // dummy
 
 void HANDLE_KEY() {
-	unsigned char stat;
-	char code;
+	unsigned char stat; // status
+	char code; // keycode
 
 	WTP(0x20, 0x20); // write end of interrupt
 
-	stat = RTP(KEYBOARD_STATUS);
+	stat = RTP(KEYBOARD_STATUS); // get status
 	// lowest bit of status will be set if buffer is not empty 
 	if (stat & 0x01) {
-		code = RTP(KEYBOARD_DATA);
+		code = RTP(KEYBOARD_DATA); // get data
 		if(code < 0)
 			return;
 
 		if(code == ENTER_KEY) {
-			NEWLINE();
+			NEWLINE(); // newline
 			return;
 		}
 
-		char text=key_map[(unsigned char) code];
-		video[location++] = key_map[(unsigned char) code];
-		video[location++] = 0x07;
-		NEWLINE();
-		run_module(key_map[(unsigned char) code],0);
+		char text=key_map[(unsigned char) code]; // get text of key
+		video[location++] = key_map[(unsigned char) code]; // place in video memory
+		video[location++] = 0x07; // attribute byte
+		NEWLINE(); // newline
+		run_module(key_map[(unsigned char) code],0); // run module, (if there is no module, it will run DUMMY)
 		if (text == 'k') {
-			printf("electron electronOS 0.0.0-alpha 5:21 PM May 24, 2018 x86_64 electron/electronOS");
+			printf("electron electronOS 0.0.0-alpha 5:21 PM May 24, 2018 x86_64 electron/electronOS"); // print kernel info
 		}
 		else if (text == 'h') {
-			printf("h - displays help\nk - kernel info\npush a module's key to load that module");
+			printf("h - displays help\nk - kernel info\npush a module's key to load that module"); // help
 		}
 		else {
-			run_module(key_map[(unsigned char) code],0);
 			if(!mod_success){
-				printf("unrecognized command: please refer to help by pressing h");
+				printf("unrecognized command: please refer to help by pressing h"); // no module, or doesn't conform to standard. 
 			};
 		};
 		printf("\nelectronOS# "); // place prompt
@@ -183,39 +182,41 @@ void HANDLE_KEY() {
 }
 
 void about(){
-	printf("electron is an open source, unlicensed OS. ");
-	mod_success=1;
+	printf("electron is an open source, unlicensed OS. "); // about
+	mod_success=1; // module successful! 
 	return;
 };
 
 void coreutils_start(){
-	add_module('a',&about);
+	add_module('a',&about); // add about module
 	return;
 };
 
 
 void STARTUP(){
+	// ADD YOUR OWN C BESIDED COREUTILS
 	// the following code assumes core-utils is used. 
 	coreutils_start(); // load core-utils, comment to disable core-utils, and get a bare kernel. 
 };
 
 // SYSCALLS
 int SET_ALIVE(int i){
-	ALIVE=i;
-	return ALIVE;
+	ALIVE=i; // set
+	return ALIVE; // return what was set
 };
 
+// KERNEL
 void KERNEL() {
-	clear_screen();
+	clear_screen(); // clear the screen
 
 	for (int j; j < 16384; j++){
-		modules[j]=&DUMMY;
+		modules[j]=&DUMMY; // set pointer
 	};
-	STARTUP();
+	STARTUP(); // startup code, add your own C
 
-	IDT_INIT();
-	KEYBOARD_INIT();
-	printf("electronOS# ");
+	IDT_INIT(); // initialize IDT
+	KEYBOARD_INIT(); // initialize keyboard
+	printf("electronOS# "); // print prompt
 
-	while(!ALIVE);
+	while(!ALIVE); // stay alive while alive
 }
