@@ -12,9 +12,14 @@ __        - OK to depend on, but not entirely recommended.
 
 K - print kernel info        ###***###
 H - help                     ###***###
-A - about info               __
 
 Any other commands are likely modules, and are not built it. (exception: A)
+
+CORE-UTILS
+core-utils is a set of utilities for the electron kernel. By default, it includes the following commands. 
+A - about info
+S - shutdown electron
+C - clear screen
 
 LICENSE
 THIS KERNEL IS IN THE PUBLIC DOMAIN. YOU ARE NOT ALLOWED TO PUT IT UNDER ANY LICENSE IN ANY WAY. WARRANTIES HOWEVER, ARE ALLOWED. 
