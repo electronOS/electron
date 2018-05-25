@@ -36,8 +36,8 @@ int is_mod_count; // count
 int is_mod[16384]; // for modules
 
 void add_module(int port, inptr ptr) {
-	modules[port]=ptr; // assign
-	is_mod[is_mod_count]=port; // assign
+	modules[port] = ptr; // assign
+	is_mod[is_mod_count] = port; // assign
 	is_mod_count++; // increment counter
 	return;
 };
@@ -63,7 +63,7 @@ void IDT_INIT() {
 	unsigned long iptr[2];
 
 	// populate the IDT entry of the keyboard's interrupt
-	keyboard_addr = (unsigned long)HANDLE_KEY_ASM;
+	keyboard_addr = (unsigned long) HANDLE_KEY_ASM;
 	IDT[0x21].lower_bits = keyboard_addr & 0xffff;
 	IDT[0x21].selector = KERNEL_SEGMENT_OFFSET;
 	IDT[0x21].zero = 0;
@@ -78,25 +78,25 @@ void IDT_INIT() {
 	 */
 
 	// init ICW1
-	WTP(0x20 , 0x11);
-	WTP(0xA0 , 0x11);
+	WTP(0x20, 0x11);
+	WTP(0xA0, 0x11);
 
 	// init ICW2
-	WTP(0x21 , 0x20);
-	WTP(0xA1 , 0x28);
+	WTP(0x21, 0x20);
+	WTP(0xA1, 0x28);
 
 	// setup cascading for ICW3
-	WTP(0x21 , 0x00);
-	WTP(0xA1 , 0x00);
+	WTP(0x21, 0x00);
+	WTP(0xA1, 0x00);
 
 	// environment info for ICW4
-	WTP(0x21 , 0x01);
-	WTP(0xA1 , 0x01);
+	WTP(0x21, 0x01);
+	WTP(0xA1, 0x01);
 	// init finished
 
 	// mask interrupts 
-	WTP(0x21 , 0xff);
-	WTP(0xA1 , 0xff);
+	WTP(0x21, 0xff);
+	WTP(0xA1, 0xff);
 
 	// fill the IDT descriptor
 	idt_addr = (unsigned long) IDT;
@@ -161,13 +161,13 @@ void HANDLE_KEY() {
 			return;
 		}
 
-		char text=key_map[(unsigned char) code]; // get text of key
+		char text = key_map[(unsigned char) code]; // get text of key
 		video[location++] = key_map[(unsigned char) code]; // place in video memory
 		video[location++] = 0x07; // attribute byte
 		NEWLINE(); // newline
 		run_module(key_map[(unsigned char) code],0); // run module, (if there is no module, it will run DUMMY)
 		if (text == 'k') {
-			printf("electron electronOS 0.0.0-alpha 5:21 PM May 24, 2018 x86_64 electron/electronOS"); // print kernel info
+			printf("electron electronOS 0.0.1-alpha 20:33:48 May 24, 2018 x86_64 electron/electronOS"); // print kernel info
 		}
 		else if (text == 'h') {
 			printf("h - displays help\nk - kernel info\npush a module's key to load that module"); // help
@@ -183,12 +183,19 @@ void HANDLE_KEY() {
 
 void about(){
 	printf("electron is an open source, unlicensed OS. "); // about
-	mod_success=1; // module successful! 
+	mod_success = 1; // module successful! 
+	return;
+};
+
+void shutdown(){
+	ALIVE = 1; // shutdown
+	mod_success = 1; // module successful! 
 	return;
 };
 
 void coreutils_start(){
-	add_module('a',&about); // add about module
+	add_module('a', &about); // add about module
+	add_module('s', &shutdown); // add shutdown module
 	return;
 };
 
@@ -201,7 +208,7 @@ void STARTUP(){
 
 // SYSCALLS
 int SET_ALIVE(int i){
-	ALIVE=i; // set
+	ALIVE = i; // set
 	return ALIVE; // return what was set
 };
 
@@ -210,7 +217,7 @@ void KERNEL() {
 	clear_screen(); // clear the screen
 
 	for (int j; j < 16384; j++){
-		modules[j]=&DUMMY; // set pointer
+		modules[j] = &DUMMY; // set pointer
 	};
 	STARTUP(); // startup code, add your own C
 
