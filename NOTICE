@@ -1,0 +1,4 @@
+electron was created in 2018, by iH8Ra1n. (github.com/iHateRa1n)
+I AM AWARE THAT IT DOES NOT CURRENTLY BOOT ON HARDWARE, FROM MY TESTING. I WISH TO REMEDY THIS IN THE FUTURE. 
+electron is just a hobby project, that I have only successfully booted using the -kernel option in Qemu. 
+I am working on getting it to work with the -cdrom option. 
