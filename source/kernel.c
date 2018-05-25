@@ -36,6 +36,9 @@ int is_mod_count; // count
 int is_mod[16384]; // for modules
 
 void add_module(int port, inptr ptr) {
+	if (port > 16384) {
+		return; // implemented buffer overflow protection
+	};
 	modules[port] = ptr; // assign
 	is_mod[is_mod_count] = port; // assign
 	is_mod_count++; // increment counter
@@ -43,6 +46,9 @@ void add_module(int port, inptr ptr) {
 };
 
 void run_module(int port, int i) {
+	if (port > 16384) {
+		return; // buffer overflow protection
+	};
 	(*modules[port])(i); // execute module
 	return;
 };
@@ -116,6 +122,9 @@ void KEYBOARD_INIT() {
 void printf(const char *s) {
 	unsigned int COUNT = 0; // counter
 	while (s[COUNT] != '\0') {
+		if (s[COUNT] == '\0') {
+			return;
+		};
 		if (s[COUNT] == '\n') {
 			NEWLINE(); // newline
 			COUNT++; // increment
@@ -137,11 +146,18 @@ void clear_screen() {
 	while (COUNT < SCREEN) {
 		video[COUNT++] = ' '; // clear
 		video[COUNT++] = 0x07; // attribute
-	}
+	};
+	location = 0;
 	return;
 }
 
-int DUMMY(){}; // dummy
+void clear_mod() {
+	clear_screen();
+	mod_success = 1;
+	return;
+};
+
+int DUMMY() {}; // dummy
 
 void HANDLE_KEY() {
 	unsigned char stat; // status
@@ -159,7 +175,7 @@ void HANDLE_KEY() {
 		if(code == ENTER_KEY) {
 			NEWLINE(); // newline
 			return;
-		}
+		};
 
 		char text = key_map[(unsigned char) code]; // get text of key
 		video[location++] = key_map[(unsigned char) code]; // place in video memory
@@ -173,7 +189,7 @@ void HANDLE_KEY() {
 			printf("h - displays help\nk - kernel info\npush a module's key to load that module"); // help
 		}
 		else {
-			if(!mod_success){
+			if (!mod_success) {
 				printf("unrecognized command: please refer to help by pressing h"); // no module, or doesn't conform to standard. 
 			};
 		};
@@ -181,48 +197,72 @@ void HANDLE_KEY() {
 	}
 }
 
-void about(){
+void about() {
 	printf("electron is an open source, unlicensed OS. "); // about
 	mod_success = 1; // module successful! 
 	return;
 };
 
-void shutdown(){
+void shutdown() {
 	ALIVE = 1; // shutdown
 	mod_success = 1; // module successful! 
 	return;
 };
 
-void coreutils_start(){
+void coreutils_start() {
 	add_module('a', &about); // add about module
 	add_module('s', &shutdown); // add shutdown module
+	add_module('c', &clear_mod); // add clear screen module
 	return;
 };
 
-
-void STARTUP(){
+void STARTUP() {
 	// ADD YOUR OWN C BESIDED COREUTILS
 	// the following code assumes core-utils is used. 
 	coreutils_start(); // load core-utils, comment to disable core-utils, and get a bare kernel. 
 };
 
 // SYSCALLS
-int SET_ALIVE(int i){
+int SET_ALIVE(int i) {
 	ALIVE = i; // set
 	return ALIVE; // return what was set
+};
+
+void BOOT_MSG() {
+	printf("THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY, EXPRESS OR IMPLIED. YOU ARE"); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
+	NEWLINE();
+	printf("NOT ALLOWED TO LICENSE THIS SOFTWARE. "); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
+	NEWLINE();
+	NEWLINE();
+	NEWLINE();
+};
+
+int IS_VERBOSE(char boot_args[1024]) {
+	if (boot_args[0] == '-') {
+		if (boot_args[1] == 'v') {
+			return 1;
+		};
+	};
+	return 0;
 };
 
 // KERNEL
 void KERNEL() {
 	clear_screen(); // clear the screen
+	char boot_args[1024]="-v";
+	if (IS_VERBOSE(boot_args)) {
+		printf("verbose");
+		NEWLINE();
+	};
 
-	for (int j; j < 16384; j++){
+	for (int j; j < 16384; j++) {
 		modules[j] = &DUMMY; // set pointer
 	};
+	NEWLINE();
 	STARTUP(); // startup code, add your own C
-
 	IDT_INIT(); // initialize IDT
 	KEYBOARD_INIT(); // initialize keyboard
+	BOOT_MSG();
 	printf("electronOS# "); // print prompt
 
 	while(!ALIVE); // stay alive while alive
