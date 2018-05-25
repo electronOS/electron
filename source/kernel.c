@@ -22,7 +22,7 @@ extern unsigned char keyboard[128]; // keyboard map
 extern void HANDLE_KEY_ASM(); // assembly key handler
 extern char RTP(unsigned short port); // read port
 extern void WTP(unsigned short port, unsigned char data); // write port
-extern void IDT_LOAD(unsigned long *iptr); // load it
+extern void IDT_LOAD(unsigned long *iptr); // load idt
 
 unsigned int location = 0; // Cursor location
 char *video = (char*) 0xb8000; // video memory begins at address 0xb8000
