@@ -21,10 +21,10 @@ int ALIVE; // if machine is alive
 int mod_success; // module success
 
 typedef (*inptr)(int); // for modules
-inptr modules[16384]; // modules
+inptr modules[131072]; // modules
 
 int is_mod_count; // count
-int is_mod[16384]; // for modules
+int is_mod[131072]; // for modules
 
 struct IDT_entry {
 	unsigned short int lower_bits;

@@ -43,3 +43,6 @@ void functions look like this:
 void func(){};
 (arguments are fine)
 
+REQUIREMENTS
+x86 CPU
+16MB of RAM

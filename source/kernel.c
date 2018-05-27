@@ -182,7 +182,6 @@ void STARTUP() {
 	// ADD YOUR OWN C BESIDED COREUTILS
 	// the following code assumes core-utils is used. 
 	coreutils_start(); // load core-utils, comment to disable core-utils, and get a bare kernel. 
-	add_module('t', &test_mod);
 };
 
 // SYSCALLS
@@ -192,9 +191,8 @@ int SET_ALIVE(int i) {
 };
 
 void BOOT_MSG() {
-	printf("THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY, EXPRESS OR IMPLIED. YOU ARE"); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
+	printf("THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY, EXPRESS OR IMPLIED. "); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
 	NEWLINE();
-	printf("NOT ALLOWED TO LICENSE THIS SOFTWARE. "); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
 	NEWLINE();
 	NEWLINE();
 	NEWLINE();
