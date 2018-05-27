@@ -8,7 +8,7 @@
 #include "MAIN.h"
 
 void add_module(int port, inptr ptr) {
-	if (port > 16384) {
+	if (port > 131072) {
 		return; // implemented buffer overflow protection
 	};
 	modules[port] = ptr; // assign
@@ -18,7 +18,7 @@ void add_module(int port, inptr ptr) {
 };
 
 void run_module(int port, int i) {
-	if (port > 16384) {
+	if (port > 131072) {
 		return; // buffer overflow protection
 	};
 	(*modules[port])(i); // execute module
