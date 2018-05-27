@@ -5,35 +5,7 @@
  */
 
 #include "KEY_MAP.h"
-#define LINE 25
-#define COLUMN 80
-#define BYTES_PER_ELEMENT 2
-#define SCREEN BYTES_PER_ELEMENT * COLUMN * LINE
-
-#define KEYBOARD_DATA 0x60
-#define KEYBOARD_STATUS 0x64
-#define IDT_SIZE 256
-#define INTERRUPT_GATE 0x8e
-#define KERNEL_SEGMENT_OFFSET 0x08
-
-#define ENTER_KEY 0x1C
-
-extern unsigned char keyboard[128]; // keyboard map
-extern void HANDLE_KEY_ASM(); // assembly key handler
-extern char RTP(unsigned short port); // read port
-extern void WTP(unsigned short port, unsigned char data); // write port
-extern void IDT_LOAD(unsigned long *iptr); // load idt
-
-unsigned int location = 0; // Cursor location
-char *video = (char*) 0xb8000; // video memory begins at address 0xb8000
-int ALIVE; // if machine is alive
-int mod_success; // module success
-
-typedef (*inptr)(int); // for modules
-inptr modules[16384]; // modules
-
-int is_mod_count; // count
-int is_mod[16384]; // for modules
+#include "MAIN.h"
 
 void add_module(int port, inptr ptr) {
 	if (port > 16384) {
@@ -52,16 +24,6 @@ void run_module(int port, int i) {
 	(*modules[port])(i); // execute module
 	return;
 };
-
-struct IDT_entry {
-	unsigned short int lower_bits;
-	unsigned short int selector;
-	unsigned char zero;
-	unsigned char type_attr;
-	unsigned short int higher_bits;
-};
-
-struct IDT_entry IDT[IDT_SIZE];
 
 void IDT_INIT() {
 	unsigned long keyboard_addr;
@@ -220,6 +182,7 @@ void STARTUP() {
 	// ADD YOUR OWN C BESIDED COREUTILS
 	// the following code assumes core-utils is used. 
 	coreutils_start(); // load core-utils, comment to disable core-utils, and get a bare kernel. 
+	add_module('t', &test_mod);
 };
 
 // SYSCALLS
@@ -237,23 +200,9 @@ void BOOT_MSG() {
 	NEWLINE();
 };
 
-int IS_VERBOSE(char boot_args[1024]) {
-	if (boot_args[0] == '-') {
-		if (boot_args[1] == 'v') {
-			return 1;
-		};
-	};
-	return 0;
-};
-
 // KERNEL
 void KERNEL() {
 	clear_screen(); // clear the screen
-	char boot_args[1024]="-v";
-	if (IS_VERBOSE(boot_args)) {
-		printf("verbose");
-		NEWLINE();
-	};
 
 	for (int j; j < 16384; j++) {
 		modules[j] = &DUMMY; // set pointer

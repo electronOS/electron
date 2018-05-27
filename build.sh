@@ -3,6 +3,5 @@ echo "this script will build the LATEST electron, from source, and deposit it in
 mkdir tmp
 nasm -f elf32 source/boot.asm -o tmp/asm.o
 gcc -fno-stack-protector -m32 -c source/kernel.c -o tmp/kernel.o -I headers
-ld -m elf_i386 -T link.ld -o kernel tmp/asm.o tmp/kernel.o
-rm -rf tmp
+ld -m elf_i386 -T link.ld -o kernel tmp/*.o
 echo "done"
