@@ -73,13 +73,13 @@ void IDT_INIT() {
 
 	IDT_LOAD(iptr);
 	return;
-}
+};
 
 void KEYBOARD_INIT() {
 	// 0xFD is 11111101 - enables IRQ1 (keyboard)
 	WTP(0x21 , 0xFD);
 	return;
-}
+};
 
 void printf(const char *s) {
 	unsigned int COUNT = 0; // counter
@@ -93,15 +93,31 @@ void printf(const char *s) {
 		};
 		video[location++] = s[COUNT++]; // place character
 		video[location++] = 0x07; // place attributes
-	}
+	};
 	return;
-}
+};
+
+void printc(const char *s, int color) {
+	unsigned int COUNT = 0; // counter
+        while (s[COUNT] != '\0') {
+                if (s[COUNT] == '\0') {
+                        return;
+                };
+                if (s[COUNT] == '\n') {
+                        NEWLINE(); // newline
+                        COUNT++; // increment
+                };
+                video[location++] = s[COUNT++]; // place character
+                video[location++] = color; // place attributes
+        }
+        return;
+};
 
 void NEWLINE() {
 	unsigned int line_size = BYTES_PER_ELEMENT * COLUMN; // calculate linesize
 	location = location + (line_size - location % (line_size)); // increment line
 	return;
-}
+};
 
 void clear_screen() {
 	unsigned int COUNT = 0; // counter
@@ -111,7 +127,7 @@ void clear_screen() {
 	};
 	location = 0;
 	return;
-}
+};
 
 void clear_mod() {
 	clear_screen();
@@ -156,8 +172,8 @@ void HANDLE_KEY() {
 			};
 		};
 		printf("\nelectronOS# "); // place prompt
-	}
-}
+	};
+};
 
 void about() {
 	printf("electron is an open source, unlicensed OS. "); // about
@@ -205,7 +221,6 @@ void KERNEL() {
 	for (int j; j < 16384; j++) {
 		modules[j] = &DUMMY; // set pointer
 	};
-	NEWLINE();
 	STARTUP(); // startup code, add your own C
 	IDT_INIT(); // initialize IDT
 	KEYBOARD_INIT(); // initialize keyboard
@@ -213,4 +228,4 @@ void KERNEL() {
 	printf("electronOS# "); // print prompt
 
 	while(!ALIVE); // stay alive while alive
-}
+};
