@@ -1,6 +1,6 @@
 MODULES
 Modules are snippets of code that can be inserted into the kernel, to run in the elecSH shell, or in other programs. 
-Note that module ports >= 65536, are reserved for the kernel. 
+Note that module ports >= 65536 are reserved for the kernel. 
 Here is an example of a kernel module. 
 | BEGIN MODULE |
 void module(int null) {

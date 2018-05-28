@@ -1,8 +1,22 @@
-ABOUT
 electron is a free and open-source kernel, which is also unlicensed. 
 Run build.sh to build the latest kernel, after making tweaks.
-The main kenel is in source/kernel.c and the boot file is in source/boot.asm. 
-# CORE-UTILScore-utils is a set of utilities for the electron kernel. By default, it includes the following commands. 
+The main kernel is in source/kernel.c and the boot file is in source/boot.asm. 
+
+COMMANDS
+Priority levels are important for the following table. They are
+_         - Shouldn't be depended on, may be removed. 
+__        - OK to depend on, but not entirely recommended. 
+#         - important!
+*         - very important!
+###***### - isn't an Electron OS without it.
+
+K - print kernel info        ###***###
+H - help                     ###***###
+
+Any other commands are likely modules, and are not built it. (exception: A)
+
+CORE-UTILS
+core-utils is a set of utilities for the electron kernel. By default, it includes the following commands. 
 A - about info
 S - shutdown electron
 C - clear screen
@@ -20,21 +34,15 @@ SYSCALLS
 SET_ALIVE(i); set ALIVE to i. (shutdown if not 0)
 add_module(int port, inptr ptr); add kernel module. ptr is a pointer to a function. 
 run_module(int port, int i); launch kernel module at port, pass argument i. 
-shutdown(); kill the kernel
 
 STANDARD
 ALL modules have to set mod_success to 1 upon succeeding, for electron to know it exited correctly. 
 void functions do not look like this:
 void func(void){};
 void functions look like this:
-void func() {};
+void func(){};
 (arguments are fine)
-if statements, or anything that uses {}, start on the SAME line, use a space between the () and {}, and have a ; after }. 
-# REQUIREMENTS
+
+REQUIREMENTS
 x86 CPU
 16MB of RAM
-VGA
-
-DOWNLOAD
-Download the latest source code using the following button. 
-[LATEST SOURCE CODE](https://codeload.github.com/electronOS/electron/zip/master)

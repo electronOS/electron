@@ -17,6 +17,7 @@ extern void WTP(unsigned short port, unsigned char data); // write port
 extern void IDT_LOAD(unsigned long *iptr); // load idt
 int location = 0; // Cursor location
 char *video = (char*) 0xb8000; // video memory begins at address 0xb8000
+char KERNEL_LOG[80*25];
 int ALIVE; // if machine is alive
 int mod_success; // module success
 
@@ -51,6 +52,7 @@ void coreutils_start();
 void STARTUP();
 void BOOT_MSG();
 void test_mod(int k);
+void log(const char *s);
 
 int DUMMY();
 int SET_ALIVE(int i);

@@ -7,9 +7,33 @@
 #include "KEY_MAP.h"
 #include "MAIN.h"
 
+void log(const char *s, int state) {
+	/*
+	log syscall
+	logs to KERNEL_LOG
+	*/
+	if (state == 0) {
+		KERNEL_LOG += "[INFO] ";
+	}
+	else if (state == 1) {
+		KERNEL_LOG += "[WARNING] ";
+	}
+	else if (state == 2) {
+		KERNEL_LOG += "[ERROR] ";
+	}
+	else {
+		KERNEL_LOG += "[UNKNOWN] ";
+	};
+	KERNEL_LOG += s;
+	return;
+};
+
 void add_module(int port, inptr ptr) {
 	if (port > 131072) {
 		return; // implemented buffer overflow protection
+	};
+	if (port >= 65536) {
+		log("module is being added in kernel-level module ports", 1);
 	};
 	modules[port] = ptr; // assign
 	is_mod[is_mod_count] = port; // assign
@@ -160,11 +184,8 @@ void HANDLE_KEY() {
 		video[location++] = 0x07; // attribute byte
 		NEWLINE(); // newline
 		run_module(key_map[(unsigned char) code],0); // run module, (if there is no module, it will run DUMMY)
-		if (mod_success) {
-			return;
-		};
 		if (text == 'k') {
-			printf("electron electronOS 0.0.1.1 20:33:48 May 24, 2018 x86_64 electron/electronOS"); // print kernel info
+			printf("electron electronOS 0.0.2rc1 17:52:41 EST May 28, 2018 x86_64 electron/electronOS"); // print kernel info
 		}
 		else if (text == 'h') {
 			printf("h - displays help\nk - kernel info\npush a module's key to load that module"); // help
@@ -221,7 +242,7 @@ void BOOT_MSG() {
 void KERNEL() {
 	clear_screen(); // clear the screen
 
-	for (int j; j < 16384; j++) {
+	for (int j; j < 131072; j++) {
 		modules[j] = &DUMMY; // set pointer
 	};
 	STARTUP(); // startup code, add your own C
