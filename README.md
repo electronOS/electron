@@ -15,6 +15,8 @@ Each character in a VGA font is 16 bytes, simply defining if a pixel is foregrou
 
 The electron kernel, as said before, only runs on x86 hardware, and I have only seen it work in Qemu. 
 
+The kernel, is in `KERNEL`. It calls many other functions, like `BOOT_MSG` (a boot message), and `IDT_INIT` (initalizes the IDT). 
+
 The kernel is based upon modules. 
 
 Programs, are modules; they are added into the kernel at compilation.
