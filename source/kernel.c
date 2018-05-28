@@ -195,7 +195,6 @@ void coreutils_start() {
 };
 
 void STARTUP() {
-	// ADD YOUR OWN C BESIDED COREUTILS
 	// the following code assumes core-utils is used. 
 	coreutils_start(); // load core-utils, comment to disable core-utils, and get a bare kernel. 
 };
