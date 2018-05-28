@@ -7,33 +7,9 @@
 #include "KEY_MAP.h"
 #include "MAIN.h"
 
-void log(const char *s, int state) {
-	/*
-	log syscall
-	logs to KERNEL_LOG
-	*/
-	if (state == 0) {
-		KERNEL_LOG += "[INFO] ";
-	}
-	else if (state == 1) {
-		KERNEL_LOG += "[WARNING] ";
-	}
-	else if (state == 2) {
-		KERNEL_LOG += "[ERROR] ";
-	}
-	else {
-		KERNEL_LOG += "[UNKNOWN] ";
-	};
-	KERNEL_LOG += s;
-	return;
-};
-
 void add_module(int port, inptr ptr) {
 	if (port > 131072) {
 		return; // implemented buffer overflow protection
-	};
-	if (port >= 65536) {
-		log("module is being added in kernel-level module ports", 1);
 	};
 	modules[port] = ptr; // assign
 	is_mod[is_mod_count] = port; // assign
