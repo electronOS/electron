@@ -5,38 +5,10 @@
  */
 
 #include "KEY_MAP.h"
-#define LINE 25
-#define COLUMN 80
-#define BYTES_PER_ELEMENT 2
-#define SCREEN BYTES_PER_ELEMENT * COLUMN * LINE
-
-#define KEYBOARD_DATA 0x60
-#define KEYBOARD_STATUS 0x64
-#define IDT_SIZE 256
-#define INTERRUPT_GATE 0x8e
-#define KERNEL_SEGMENT_OFFSET 0x08
-
-#define ENTER_KEY 0x1C
-
-extern unsigned char keyboard[128]; // keyboard map
-extern void HANDLE_KEY_ASM(); // assembly key handler
-extern char RTP(unsigned short port); // read port
-extern void WTP(unsigned short port, unsigned char data); // write port
-extern void IDT_LOAD(unsigned long *iptr); // load idt
-
-unsigned int location = 0; // Cursor location
-char *video = (char*) 0xb8000; // video memory begins at address 0xb8000
-int ALIVE; // if machine is alive
-int mod_success; // module success
-
-typedef (*inptr)(int); // for modules
-inptr modules[16384]; // modules
-
-int is_mod_count; // count
-int is_mod[16384]; // for modules
+#include "MAIN.h"
 
 void add_module(int port, inptr ptr) {
-	if (port > 16384) {
+	if (port > 131072) {
 		return; // implemented buffer overflow protection
 	};
 	modules[port] = ptr; // assign
@@ -46,22 +18,12 @@ void add_module(int port, inptr ptr) {
 };
 
 void run_module(int port, int i) {
-	if (port > 16384) {
+	if (port > 131072) {
 		return; // buffer overflow protection
 	};
 	(*modules[port])(i); // execute module
 	return;
 };
-
-struct IDT_entry {
-	unsigned short int lower_bits;
-	unsigned short int selector;
-	unsigned char zero;
-	unsigned char type_attr;
-	unsigned short int higher_bits;
-};
-
-struct IDT_entry IDT[IDT_SIZE];
 
 void IDT_INIT() {
 	unsigned long keyboard_addr;
@@ -111,13 +73,13 @@ void IDT_INIT() {
 
 	IDT_LOAD(iptr);
 	return;
-}
+};
 
 void KEYBOARD_INIT() {
 	// 0xFD is 11111101 - enables IRQ1 (keyboard)
 	WTP(0x21 , 0xFD);
 	return;
-}
+};
 
 void printf(const char *s) {
 	unsigned int COUNT = 0; // counter
@@ -131,15 +93,31 @@ void printf(const char *s) {
 		};
 		video[location++] = s[COUNT++]; // place character
 		video[location++] = 0x07; // place attributes
-	}
+	};
 	return;
-}
+};
+
+void printc(const char *s, int color) {
+	unsigned int COUNT = 0; // counter
+        while (s[COUNT] != '\0') {
+                if (s[COUNT] == '\0') {
+                        return;
+                };
+                if (s[COUNT] == '\n') {
+                        NEWLINE(); // newline
+                        COUNT++; // increment
+                };
+                video[location++] = s[COUNT++]; // place character
+                video[location++] = color; // place attributes
+        }
+        return;
+};
 
 void NEWLINE() {
 	unsigned int line_size = BYTES_PER_ELEMENT * COLUMN; // calculate linesize
 	location = location + (line_size - location % (line_size)); // increment line
 	return;
-}
+};
 
 void clear_screen() {
 	unsigned int COUNT = 0; // counter
@@ -149,7 +127,7 @@ void clear_screen() {
 	};
 	location = 0;
 	return;
-}
+};
 
 void clear_mod() {
 	clear_screen();
@@ -160,7 +138,6 @@ void clear_mod() {
 int DUMMY() {}; // dummy
 
 void HANDLE_KEY() {
-	return;
 	unsigned char stat; // status
 	char code; // keycode
 
@@ -182,8 +159,12 @@ void HANDLE_KEY() {
 		video[location++] = key_map[(unsigned char) code]; // place in video memory
 		video[location++] = 0x07; // attribute byte
 		NEWLINE(); // newline
+		run_module(key_map[(unsigned char) code],0); // run module, (if there is no module, it will run DUMMY)
+		if (mod_success) {
+			return;
+		};
 		if (text == 'k') {
-			printf("electron electronOS 0.0.1-alpha 20:33:48 May 24, 2018 x86_64 electron/electronOS"); // print kernel info
+			printf("electron electronOS 0.0.1.1 20:33:48 May 24, 2018 x86_64 electron/electronOS"); // print kernel info
 		}
 		else if (text == 'h') {
 			printf("h - displays help\nk - kernel info\npush a module's key to load that module"); // help
@@ -194,8 +175,8 @@ void HANDLE_KEY() {
 			};
 		};
 		printf("\nelectronOS# "); // place prompt
-	}
-}
+	};
+};
 
 void about() {
 	printf("electron is an open source, unlicensed OS. "); // about
@@ -212,7 +193,7 @@ void shutdown() {
 void coreutils_start() {
 	add_module('a', &about); // add about module
 	add_module('s', &shutdown); // add shutdown module
-	add_module('c', &clear_screen); // add clear screen module
+	add_module('c', &clear_mod); // add clear screen module
 	return;
 };
 
@@ -229,24 +210,25 @@ int SET_ALIVE(int i) {
 };
 
 void BOOT_MSG() {
-	printf("THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY, EXPRESS OR IMPLIED. YOU ARE"); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
-	NEWLINE();
-	printf("NOT ALLOWED TO LICENSE THIS SOFTWARE. "); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
+	printf("THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY, EXPRESS OR IMPLIED. "); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
 	NEWLINE();
 	NEWLINE();
 	NEWLINE();
-};
-
-int IS_VERBOSE(char boot_args[1024]) {
-	if (boot_args[0] == '-') {
-		if (boot_args[1] == 'v') {
-			return 1;
-		};
-	};
-	return 0;
+	NEWLINE();
 };
 
 // KERNEL
 void KERNEL() {
-	while(1); // stay alive while alive
-}
+	clear_screen(); // clear the screen
+
+	for (int j; j < 16384; j++) {
+		modules[j] = &DUMMY; // set pointer
+	};
+	STARTUP(); // startup code, add your own C
+	IDT_INIT(); // initialize IDT
+	KEYBOARD_INIT(); // initialize keyboard
+	BOOT_MSG();
+	printf("electronOS# "); // print prompt
+
+	while(!ALIVE); // stay alive while alive
+};
