@@ -43,5 +43,5 @@ DEVICE_START:
 	hlt;
 
 section .bss
-resb 16777216; 1 MB for the stack. 
+resb 16777216; 16 MB for the stack. 
 STACK:
