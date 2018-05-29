@@ -7,6 +7,7 @@
 #include "KEY_MAP.h"
 #include "MAIN.h"
 
+// ADD MODULE
 void add_module(int port, inptr ptr) {
 	if (port > 131072) {
 		return; // implemented buffer overflow protection
@@ -17,6 +18,7 @@ void add_module(int port, inptr ptr) {
 	return;
 };
 
+// RUN MODULE
 void run_module(int port, int i) {
 	if (port > 131072) {
 		return; // buffer overflow protection
@@ -25,6 +27,7 @@ void run_module(int port, int i) {
 	return;
 };
 
+// INITIALIZE IDT
 void IDT_INIT() {
 	unsigned long keyboard_addr;
 	unsigned long idt_addr;
@@ -62,7 +65,7 @@ void IDT_INIT() {
 	WTP(0xA1, 0x01);
 	// init finished
 
-	// mask interrupts 
+	// mask interrupts
 	WTP(0x21, 0xff);
 	WTP(0xA1, 0xff);
 
@@ -75,12 +78,14 @@ void IDT_INIT() {
 	return;
 };
 
+// INITIALIZE KEYBOARD
 void KEYBOARD_INIT() {
 	// 0xFD is 11111101 - enables IRQ1 (keyboard)
 	WTP(0x21 , 0xFD);
 	return;
 };
 
+// PRINT
 void printf(const char *s) {
 	unsigned int COUNT = 0; // counter
 	while (s[COUNT] != '\0') {
@@ -97,6 +102,7 @@ void printf(const char *s) {
 	return;
 };
 
+// PRINT WITH COLOR
 void printc(const char *s, int color) {
 	unsigned int COUNT = 0; // counter
         while (s[COUNT] != '\0') {
@@ -113,12 +119,14 @@ void printc(const char *s, int color) {
         return;
 };
 
+// MAKE NEWLINE
 void NEWLINE() {
 	unsigned int line_size = BYTES_PER_ELEMENT * COLUMN; // calculate linesize
 	location = location + (line_size - location % (line_size)); // increment line
 	return;
 };
 
+// CLEAR SCREEN
 void clear_screen() {
 	unsigned int COUNT = 0; // counter
 	while (COUNT < SCREEN) {
@@ -129,6 +137,7 @@ void clear_screen() {
 	return;
 };
 
+// CLEAR SCREEN MODULE
 void clear_mod() {
 	clear_screen();
 	mod_success = 1;
@@ -137,6 +146,7 @@ void clear_mod() {
 
 int DUMMY() {}; // dummy
 
+// HANDLES KEYPRESSES
 void HANDLE_KEY() {
 	unsigned char stat; // status
 	char code; // keycode
@@ -144,7 +154,7 @@ void HANDLE_KEY() {
 	WTP(0x20, 0x20); // write end of interrupt
 
 	stat = RTP(KEYBOARD_STATUS); // get status
-	// lowest bit of status will be set if buffer is not empty 
+	// lowest bit of status will be set if buffer is not empty
 	if (stat & 0x01) {
 		code = RTP(KEYBOARD_DATA); // get data
 		if(code < 0)
@@ -175,18 +185,21 @@ void HANDLE_KEY() {
 	};
 };
 
+// ABOUT MODULE
 void about() {
 	printf("electron is an open source, unlicensed OS. "); // about
-	mod_success = 1; // module successful! 
+	mod_success = 1; // module successful!
 	return;
 };
 
+// SHUTDOWN MODULE
 void shutdown() {
 	ALIVE = 1; // shutdown
-	mod_success = 1; // module successful! 
+	mod_success = 1; // module successful!
 	return;
 };
 
+// START COREUTILS
 void coreutils_start() {
 	add_module('a', &about); // add about module
 	add_module('s', &shutdown); // add shutdown module
@@ -194,10 +207,10 @@ void coreutils_start() {
 	return;
 };
 
+// STARTUP
 void STARTUP() {
-	// ADD YOUR OWN C BESIDED COREUTILS
-	// the following code assumes core-utils is used. 
-	coreutils_start(); // load core-utils, comment to disable core-utils, and get a bare kernel. 
+	// the following code assumes core-utils is used.
+	coreutils_start(); // load core-utils, comment to disable core-utils, and get a bare kernel.
 };
 
 // SYSCALLS
@@ -206,11 +219,9 @@ int SET_ALIVE(int i) {
 	return ALIVE; // return what was set
 };
 
+// BOOT MESSAGE
 void BOOT_MSG() {
-	printf("THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY, EXPRESS OR IMPLIED. "); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
-	NEWLINE();
-	NEWLINE();
-	NEWLINE();
+	printf("electron v0.0.2.1"); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
 	NEWLINE();
 };
 
@@ -221,10 +232,11 @@ void KERNEL() {
 	for (int j; j < 131072; j++) {
 		modules[j] = &DUMMY; // set pointer
 	};
+
 	STARTUP(); // startup code, add your own C
 	IDT_INIT(); // initialize IDT
 	KEYBOARD_INIT(); // initialize keyboard
-	BOOT_MSG();
+	BOOT_MSG(); // BOOT MESSAGE
 	printf("electronOS# "); // print prompt
 
 	while(!ALIVE); // stay alive while alive
