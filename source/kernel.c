@@ -146,6 +146,34 @@ void clear_mod() {
 
 int DUMMY() {}; // dummy
 
+int strcmp(char s1[1024], char s2[1024]) {
+	while (*s1 && *s2) {
+		if (*s1 != *s2) {
+			return 1;
+		};
+		s1++;
+		s2++;
+	};
+	return 0;
+};
+
+void handle_keyboard(int i) {
+	if (strcmp(cmd, HELP_STR) == 0) {
+		printf("help - this menu\nkernel - kernel info");
+		NEWLINE();
+	}
+	else if (strcmp(cmd, KERN_STR) == 0) {
+		printf("electron electronOS v0.0.3 15:17:31 EST May 30, 2018 electron/electronOS RELEASE");
+		NEWLINE();
+	}
+	else {
+		run_module(cmd[0], 0);
+		NEWLINE();
+	};
+	printf("# ");
+	return;
+};
+
 // HANDLES KEYPRESSES
 void HANDLE_KEY() {
 	unsigned char stat; // status
@@ -157,33 +185,26 @@ void HANDLE_KEY() {
 	// lowest bit of status will be set if buffer is not empty
 	if (stat & 0x01) {
 		code = RTP(KEYBOARD_DATA); // get data
-		if(code < 0)
+		if (code < 0)
 			return;
 
-		if(code == ENTER_KEY) {
-			NEWLINE(); // newline
-			return;
-		};
-
-		char text = key_map[(unsigned char) code]; // get text of key
-		video[location++] = key_map[(unsigned char) code]; // place in video memory
-		video[location++] = 0x07; // attribute byte
-		NEWLINE(); // newline
-		run_module(key_map[(unsigned char) code],0); // run module, (if there is no module, it will run DUMMY)
-		if (text == 'k') {
-			printf("electron electronOS 0.0.2rc1 17:52:41 EST May 28, 2018 x86_64 electron/electronOS"); // print kernel info
-		}
-		else if (text == 'h') {
-			printf("h - displays help\nk - kernel info\npush a module's key to load that module"); // help
-		}
-		else {
-			if (!mod_success) {
-				printf("unrecognized command: please refer to help by pressing h"); // no module, or doesn't conform to standard. 
+		if (code == ENTER_KEY) {
+			cmd_count = 0;
+			NEWLINE();
+			run_module(0x1aaaa, 0);
+			for (int j; j < 1024; j++) {
+				cmd[j] = 0;
 			};
+			return;
 		};
-		printf("\nelectronOS# "); // place prompt
+
+		cmd[cmd_count++] = key_map[(unsigned char) code];
+	    video[location++] = key_map[(unsigned char) code]; // place in video memory
+		video[location++] = 0x07; // attribute byte
 	};
 };
+
+
 
 // ABOUT MODULE
 void about() {
@@ -211,6 +232,7 @@ void coreutils_start() {
 void STARTUP() {
 	// the following code assumes core-utils is used.
 	coreutils_start(); // load core-utils, comment to disable core-utils, and get a bare kernel.
+	add_module(0x1aaaa, &handle_keyboard);
 };
 
 // SYSCALLS
@@ -221,7 +243,7 @@ int SET_ALIVE(int i) {
 
 // BOOT MESSAGE
 void BOOT_MSG() {
-	printf("electron v0.0.2.1"); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
+	printf("electron v0.0.3"); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
 	NEWLINE();
 };
 
@@ -237,7 +259,6 @@ void KERNEL() {
 	IDT_INIT(); // initialize IDT
 	KEYBOARD_INIT(); // initialize keyboard
 	BOOT_MSG(); // BOOT MESSAGE
-	printf("electronOS# "); // print prompt
 
 	while(!ALIVE); // stay alive while alive
 };

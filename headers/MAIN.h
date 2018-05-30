@@ -20,6 +20,11 @@ char *video = (char*) 0xb8000; // video memory begins at address 0xb8000
 int ALIVE; // if machine is alive
 int mod_success; // module success
 
+char cmd[1024]="";
+int cmd_count=0;
+char HELP_STR[1024]="help";
+char KERN_STR[1024]="kernel";
+
 typedef (*inptr)(int); // for modules
 inptr modules[131072]; // modules
 
