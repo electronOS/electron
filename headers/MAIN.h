@@ -20,10 +20,10 @@ char *video = (char*) 0xb8000; // video memory begins at address 0xb8000
 int ALIVE; // if machine is alive
 int mod_success; // module success
 
-char cmd[1024]="";
-int cmd_count=0;
-char HELP_STR[1024]="help";
-char KERN_STR[1024]="kernel";
+char cmd[1024]=""; // command
+int cmd_count=0; // command write location
+char HELP_STR[1024]="help"; // help string
+char KERN_STR[1024]="kernel"; // kernel string (for kernel info)
 
 typedef (*inptr)(int); // for modules
 inptr modules[131072]; // modules
@@ -41,22 +41,21 @@ struct IDT_entry {
 
 struct IDT_entry IDT[IDT_SIZE];
 
-void add_module(int port, inptr ptr);
-void run_module(int port, int i);
-void IDT_INIT();
-void KEYBOARD_INIT();
-void printf(const char *s);
-void NEWLINE();
-void clear_screen();
-void clear_mod();
-void HANDLE_KEY();
-void about();
-void shutdown();
-void coreutils_start();
-void STARTUP();
-void BOOT_MSG();
-void test_mod(int k);
-void log(const char *s, int state);
-
-int DUMMY();
-int SET_ALIVE(int i);
+void add_module(int port, inptr ptr); // add module
+void run_module(int port, int i); // run module
+void IDT_INIT(); // initialize IDT
+void KEYBOARD_INIT(); // initialize keyboard
+void printf(const char *s); // print data to VGA Text Buffer
+void NEWLINE(); // newline in VGA Text Buffer
+void clear_screen(); // clear screen
+void clear_mod(); // clear screen module
+void HANDLE_KEY(); // handle keyboard input (C)
+void about(); // about module
+void shutdown(); // shutdown module
+void coreutils_start(); // add coreutils to module list
+void STARTUP(); // startup
+void BOOT_MSG(); // boot message
+void handle_keyboard(int i);
+int strcmp(char s1[1024], char s2[1024]);
+int DUMMY(); // dummy function
+int SET_ALIVE(int i); // SET_ALIVE syscall
