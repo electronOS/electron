@@ -163,11 +163,11 @@ void handle_keyboard(int i) {
 		NEWLINE(); // newline
 	}
 	else if (strcmp(cmd, KERN_STR) == 0) {
-		printf("electron electronOS v0.0.4 09:31:34 EST May 31, 2018 electron/electronOS RELEASE"); // print kernel information
+		printf("electron electronOS v0.0.5 12:42:43 EST May 31, 2018 electron/electronOS RELEASE"); // print kernel information
 		NEWLINE(); // newline
 	}
 	else {
-		run_module(cmd[0], 0); // run module
+		run_module(0x1fd00, (cmd[0] * (pow(256,3))) + (cmd[1] * (pow(256,2))) + (cmd[2] * (256)) + (cmd[3]));
 		NEWLINE(); // newline
 	};
 	printf("# "); // prompt
@@ -192,19 +192,17 @@ void HANDLE_KEY() {
 			cmd_count = 0; // write to the correct place
 			NEWLINE(); // newline
 			run_module(0x1aaaa, 0); // handle keyboard input
-			for (int j; j < 1024; j++) {
+			for (int j; j < 64; j++) {
 				cmd[j] = 0; // reset command
 			};
 			return;
 		};
 
 		cmd[cmd_count++] = key_map[(unsigned char) code]; // place in command
-	    video[location++] = key_map[(unsigned char) code]; // place in video memory
+		video[location++] = key_map[(unsigned char) code]; // place in video memory
 		video[location++] = 0x07; // attribute byte
 	};
 };
-
-
 
 // ABOUT MODULE
 void about() {
@@ -220,19 +218,23 @@ void shutdown() {
 	return;
 };
 
-// START COREUTILS
-void coreutils_start() {
-	add_module('a', &about); // add about module
-	add_module('s', &shutdown); // add shutdown module
-	add_module('c', &clear_mod); // add clear screen module
-	return;
+void handle_extern(int i) {
+	if (i == 1633841013) {
+		about();
+	}
+	else if (i == 1936225652) {
+		shutdown();
+	}
+	else if (i == 1668048225) {
+		clear_screen();
+	};
 };
 
 // STARTUP
 void STARTUP() {
 	// the following code assumes core-utils is used.
-	coreutils_start(); // load core-utils, comment to disable core-utils, and get a bare kernel.
 	add_module(0x1aaaa, &handle_keyboard); // keyboard handling module
+	add_module(0x1fd00, &handle_extern);
 };
 
 // SYSCALLS
@@ -244,7 +246,7 @@ int SET_ALIVE(int i) {
 // BOOT MESSAGE
 void BOOT_MSG() {
 	NEWLINE(); // newline
-	printf("electron v0.0.4"); // REMOVE BOTH LINES IF YOU GIVE A WARRANTY
+	printf("electron v0.0.5");
 	NEWLINE(); // newline
 };
 

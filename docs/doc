@@ -10,8 +10,8 @@ __        - OK to depend on, but not entirely recommended.
 *         - very important!
 ###***### - isn't an Electron OS without it.
 
-kernel - print kernel info        ###***###
-help - help                     ###***###
+K - print kernel info        ###***###
+H - help                     ###***###
 
 Any other commands are likely modules, and are not built it. (exception: A)
 
