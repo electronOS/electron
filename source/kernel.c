@@ -167,7 +167,7 @@ void handle_keyboard(int i) {
 		NEWLINE(); // newline
 	}
 	else {
-		run_module(0x1fd00, (cmd[0] * (pow(256,3))) + (cmd[1] * (pow(256,2))) + (cmd[2] * (256)) + (cmd[3]));
+		run_module(0x1fd00, 0);
 		NEWLINE(); // newline
 	};
 	printf("# "); // prompt
