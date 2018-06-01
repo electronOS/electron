@@ -192,7 +192,7 @@ void HANDLE_KEY() {
 			cmd_count = 0; // write to the correct place
 			NEWLINE(); // newline
 			run_module(0x1aaaa, 0); // handle keyboard input
-			for (int j; j < 64; j++) {
+			for (int j; j < 1024; j++) {
 				cmd[j] = 0; // reset command
 			};
 			return;
