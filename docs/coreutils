@@ -1,0 +1,8 @@
+COREUTILS
+coreutils is a package included with the default electron kernel. 
+
+COMMANDS
+about     - about electron
+freedom   - about free software
+shutdown  - shutdown electron
+clear     - clear VGA / screen. 
