@@ -147,12 +147,12 @@ void clear_mod() {
 int DUMMY() {}; // dummy
 
 int strcmp(char s1[1024], char s2[1024]) {
-	while (*s1 && *s2) {
+	while (*s2) {
 		if (*s1 != *s2) {
-			return 1; // different
+			return 1;
 		};
-		s1++; // go to next char
-		s2++; // go to next char
+		*s1++;
+		*s2++;
 	};
 	return 0; // same
 };
@@ -219,13 +219,16 @@ void shutdown() {
 };
 
 void handle_extern(int i) {
-	if (i == 1633841013) {
+	char about_chr[1024] = "about";
+	char shutdown_chr[1024] = "shutdown";
+	char clear_chr[1024] = "clear";
+	if (strcmp(cmd, about_chr) == 0) {
 		about();
 	}
-	else if (i == 1936225652) {
+	else if (strcmp(cmd, shutdown_chr) == 0) {
 		shutdown();
 	}
-	else if (i == 1668048225) {
+	else if (strcmp(cmd, clear_chr) == 0) {
 		clear_screen();
 	};
 };
