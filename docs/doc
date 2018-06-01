@@ -13,7 +13,7 @@ __        - OK to depend on, but not entirely recommended.
 kernel - print kernel info        ###***###
 help - help                     ###***###
 
-Any other commands are likely modules, and are not built it. (exception: A)
+Any other commands are likely modules, and are not built it. 
 
 CORE-UTILS
 core-utils is a set of utilities for the electron kernel. By default, it includes the following commands. 
