@@ -1,7 +1,7 @@
 /* 
  * electronOS by iH8Ra1n. 
  * NO WARRANTY OR LICENSE IN ANY WAY. 
- * created in 2018. 
+ * created in 2018.
  */
 
 #include "KEY_MAP.h"
@@ -163,14 +163,15 @@ void handle_keyboard(int i) {
 		NEWLINE(); // newline
 	}
 	else if (strcmp(cmd, KERN_STR) == 0) {
-		printf("electron electronOS v0.0.5 12:42:43 EST May 31, 2018 electron/electronOS RELEASE"); // print kernel information
+		printf("electron electronOS v0.0.5.1 14:52:17 EST June 2, 2018 electron/electronOS RELEASE"); // print kernel information
 		NEWLINE(); // newline
 	}
 	else {
 		run_module(0x1fd00, 0);
 		NEWLINE(); // newline
 	};
-	printf("# "); // prompt
+	printc("electron ", 0x02);
+	printc("# ", 0x04); // prompt
 	return;
 };
 
@@ -225,10 +226,10 @@ void about_freedom() {
 };
 
 void handle_extern(int i) {
-	char about_chr[1024] = "about";
+	char about_chr[1024]    = "about";
 	char shutdown_chr[1024] = "shutdown";
-	char clear_chr[1024] = "clear";
-	char freedom_chr[1024] = "freedom";
+	char clear_chr[1024]    = "clear";
+	char freedom_chr[1024]  = "freedom";
 	if (strcmp(cmd, about_chr) == 0) {
 		about();
 	}
@@ -244,6 +245,7 @@ void handle_extern(int i) {
 	else {
 		printf("electron: unknown command\n");
 	};
+	return;
 };
 
 // STARTUP
@@ -251,6 +253,7 @@ void STARTUP() {
 	// the following code assumes core-utils is used.
 	add_module(0x1aaaa, &handle_keyboard); // keyboard handling module
 	add_module(0x1fd00, &handle_extern);
+	return;
 };
 
 // SYSCALLS
@@ -264,13 +267,14 @@ void BOOT_MSG() {
 	NEWLINE(); // newline
 	printf("electron v0.0.5");
 	NEWLINE(); // newline
+	return;
 };
 
 // KERNEL
 void KERNEL() {
 	clear_screen(); // clear the screen
 
-	printf("       _           _                   \n\
+	printf("        _           _                   \n\
        | |         | |                  \n\
     ___| | ___  ___| |_ _ __ ___  _ __  \n\
    / _ | |/ _ \\/ __| __| '__/ _ \\| '_ \\ \n\
@@ -288,7 +292,8 @@ void KERNEL() {
 	KEYBOARD_INIT(); // initialize keyboard
 	NEWLINE();
 	BOOT_MSG(); // BOOT MESSAGE
-	printf("# "); // prompt
+	printc("electron", 0x02);
+	printc("# ", 0x04); // prompt
 
 	while(!ALIVE); // stay alive while alive
 };
