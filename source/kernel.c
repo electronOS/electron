@@ -5,27 +5,10 @@
  */
 
 #include "KEY_MAP.h"
-#include "MAIN.h"
-
-// ADD MODULE
-void add_module(int port, inptr ptr) {
-	if (port > 131072) {
-		return; // implemented buffer overflow protection
-	};
-	modules[port] = ptr; // assign
-	is_mod[is_mod_count] = port; // assign
-	is_mod_count++; // increment counter
-	return;
-};
-
-// RUN MODULE
-void run_module(int port, int i) {
-	if (port > 131072) {
-		return; // buffer overflow protection
-	};
-	(*modules[port])(i); // execute module
-	return;
-};
+#include "main.h"
+#include "module.h"
+#include "stdio.h"
+#include "extern.h"
 
 // INITIALIZE IDT
 void IDT_INIT() {
@@ -85,40 +68,6 @@ void KEYBOARD_INIT() {
 	return;
 };
 
-// PRINT
-void printf(const char *s) {
-	unsigned int COUNT = 0; // counter
-	while (s[COUNT] != '\0') {
-		if (s[COUNT] == '\0') {
-			return;
-		};
-		if (s[COUNT] == '\n') {
-			NEWLINE(); // newline
-			COUNT++; // increment
-		};
-		video[location++] = s[COUNT++]; // place character
-		video[location++] = 0x07; // place attributes
-	};
-	return;
-};
-
-// PRINT WITH COLOR
-void printc(const char *s, int color) {
-	unsigned int COUNT = 0; // counter
-        while (s[COUNT] != '\0') {
-                if (s[COUNT] == '\0') {
-                        return; // EOL
-                };
-                if (s[COUNT] == '\n') {
-                        NEWLINE(); // newline
-                        COUNT++; // increment
-                };
-                video[location++] = s[COUNT++]; // place character
-                video[location++] = color; // place attributes
-        }
-        return;
-};
-
 // MAKE NEWLINE
 void NEWLINE() {
 	unsigned int line_size = BYTES_PER_ELEMENT * COLUMN; // calculate linesize
@@ -126,36 +75,7 @@ void NEWLINE() {
 	return;
 };
 
-// CLEAR SCREEN
-void clear_screen() {
-	unsigned int COUNT = 0; // counter
-	while (COUNT < SCREEN) {
-		video[COUNT++] = ' '; // clear
-		video[COUNT++] = 0x07; // attribute
-	};
-	location = 0; // reset where video memory is being written
-	return;
-};
-
-// CLEAR SCREEN MODULE
-void clear_mod() {
-	clear_screen(); // clear screen
-	mod_success = 1; // success
-	return;
-};
-
 int DUMMY() {}; // dummy
-
-int strcmp(char s1[1024], char s2[1024]) {
-	while (*s2) {
-		if (*s1 != *s2) {
-			return 1;
-		};
-		*s1++;
-		*s2++;
-	};
-	return 0; // same
-};
 
 void handle_keyboard(int i) {
 	if (strcmp(cmd, HELP_STR) == 0) {
@@ -205,49 +125,6 @@ void HANDLE_KEY() {
 	};
 };
 
-// ABOUT MODULE
-void about() {
-	printf("electron is an open source, unlicensed kernel. Type 'freedom', for knowledge on free software. "); // about
-	mod_success = 1; // module successful!
-	return;
-};
-
-// SHUTDOWN MODULE
-void shutdown() {
-	ALIVE = 1; // shutdown
-	mod_success = 1; // module successful!
-	return;
-};
-
-void about_freedom() {
-	printf("electron is free software. There is no license in any way. Programs you use under the electron kernel, may have a separate license to electron; so check it's license before use. ");
-	mod_success = 1;
-	return;
-};
-
-void handle_extern(int i) {
-	char about_chr[1024]    = "about";
-	char shutdown_chr[1024] = "shutdown";
-	char clear_chr[1024]    = "clear";
-	char freedom_chr[1024]  = "freedom";
-	if (strcmp(cmd, about_chr) == 0) {
-		about();
-	}
-	else if (strcmp(cmd, shutdown_chr) == 0) {
-		shutdown();
-	}
-	else if (strcmp(cmd, clear_chr) == 0) {
-		clear_screen();
-	}
-	else if (strcmp(cmd, freedom_chr) == 0) {
-		about_freedom();
-	}
-	else {
-		printf("electron: unknown command\n");
-	};
-	return;
-};
-
 // STARTUP
 void STARTUP() {
 	// the following code assumes core-utils is used.
@@ -265,7 +142,7 @@ int SET_ALIVE(int i) {
 // BOOT MESSAGE
 void BOOT_MSG() {
 	NEWLINE(); // newline
-	printf("electron v0.0.5.1");
+	printf("electron v0.0.5");
 	NEWLINE(); // newline
 	return;
 };
@@ -274,10 +151,10 @@ void BOOT_MSG() {
 void KERNEL() {
 	clear_screen(); // clear the screen
 
-	printf("        _           _                   \n\
-       | |         | |                  \n\
-    ___| | ___  ___| |_ _ __ ___  _ __  \n\
-   / _ | |/ _ \\/ __| __| '__/ _ \\| '_ \\ \n\
+	printf("        _           _\n\
+       | |         | |\n\
+    ___| | ___  ___| |_ _ __ ___  _ __\n\
+   / _ | |/ _ \\/ __| __| '__/ _ \\| '_ \\\n\
   |  __| |  __| (__| |_| | | (_) | | | |\n\
    \\___|_|\\___|\\___|\\__|_|  \\___/|_| |_|\n"); // boot message
                                        
