@@ -83,7 +83,7 @@ void handle_keyboard(int i) {
 		NEWLINE(); // newline
 	}
 	else if (strcmp(cmd, KERN_STR) == 0) {
-		printf("electron electronOS v0.0.5.1 14:52:17 EST June 2, 2018 electron/electronOS RELEASE"); // print kernel information
+		printf("electron electronOS v0.0.6 15:57:03 EST June 2, 2018 electron/electronOS RELEASE"); // print kernel information
 		NEWLINE(); // newline
 	}
 	else {
@@ -142,7 +142,7 @@ int SET_ALIVE(int i) {
 // BOOT MESSAGE
 void BOOT_MSG() {
 	NEWLINE(); // newline
-	printf("electron v0.0.5");
+	printf("electron v0.0.6");
 	NEWLINE(); // newline
 	return;
 };
