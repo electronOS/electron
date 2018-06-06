@@ -129,7 +129,7 @@ void HANDLE_KEY() {
 void STARTUP() {
 	// the following code assumes core-utils is used.
 	add_module(0x1aaaa, &handle_keyboard); // keyboard handling module
-	add_module(0x1fd00, &handle_extern);
+	add_module(0x1fd00, &handle_extern); // handles custom commands (extern.c)
 	return;
 };
 
