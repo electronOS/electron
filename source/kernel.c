@@ -1,6 +1,6 @@
-/* 
- * electronOS by iH8Ra1n. 
- * NO WARRANTY OR LICENSE IN ANY WAY. 
+/*
+ * electronOS by iH8Ra1n.
+ * NO WARRANTY OR LICENSE IN ANY WAY.
  * created in 2018.
  */
 
@@ -17,12 +17,12 @@ void IDT_INIT() {
 	unsigned long iptr[2];
 
 	// populate the IDT entry of the keyboard's interrupt
-	keyboard_addr = (unsigned long) HANDLE_KEY_ASM;
-	IDT[0x21].lower_bits = keyboard_addr & 0xffff;
+	keyboard_addr = (unsigned long) HANDLE_KEY_ASM; // keyboard address
+	IDT[0x21].lower_bits = keyboard_addr & 0xffff; // IDT's lower bits
 	IDT[0x21].selector = KERNEL_SEGMENT_OFFSET;
 	IDT[0x21].zero = 0;
 	IDT[0x21].type_attr = INTERRUPT_GATE;
-	IDT[0x21].higher_bits = (keyboard_addr & 0xffff0000) >> 16;
+	IDT[0x21].higher_bits = (keyboard_addr & 0xffff0000) >> 16; // IDT's higher bits
 
 	/*
 	 *            Ports
@@ -90,7 +90,7 @@ void handle_keyboard(int i) {
 		run_module(0x1fd00, 0);
 		NEWLINE(); // newline
 	};
-	printc("electron ", 0x02);
+	printc("electron ", 0x02); // prompt
 	printc("# ", 0x04); // prompt
 	return;
 };
@@ -127,9 +127,8 @@ void HANDLE_KEY() {
 
 // STARTUP
 void STARTUP() {
-	// the following code assumes core-utils is used.
 	add_module(0x1aaaa, &handle_keyboard); // keyboard handling module
-	add_module(0x1fd00, &handle_extern); // handles custom commands (extern.c)
+	add_module(0x1fd00, &handle_extern); // handle custom commands (extern.c)
 	return;
 };
 
@@ -157,7 +156,7 @@ void KERNEL() {
    / _ | |/ _ \\/ __| __| '__/ _ \\| '_ \\\n\
   |  __| |  __| (__| |_| | | (_) | | | |\n\
    \\___|_|\\___|\\___|\\__|_|  \\___/|_| |_|\n"); // boot message
-                                       
+
 	for (int j; j < 131072; j++) {
 		modules[j] = &DUMMY; // set pointer
 	};
@@ -169,7 +168,7 @@ void KERNEL() {
 	KEYBOARD_INIT(); // initialize keyboard
 	NEWLINE();
 	BOOT_MSG(); // BOOT MESSAGE
-	printc("electron", 0x02);
+	printc("electron", 0x02); // prompt
 	printc("# ", 0x04); // prompt
 
 	while(!ALIVE); // stay alive while alive
