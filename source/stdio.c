@@ -17,6 +17,21 @@ void printf(const char *s) {
 	return;
 };
 
+// GET LENGTH OF STRING UP TO A NULL
+int strlen(char s[]) {
+	int n;
+	while (*s) {
+		if (*s != 0) {
+			n++;
+		}
+		else {
+			break;
+		};
+		*s++;
+	};
+	return n;
+};
+
 // PRINT WITH COLOR
 void printc(const char *s, int color) {
 	unsigned int COUNT = 0; // counter

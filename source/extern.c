@@ -2,33 +2,41 @@
 #include "extern.h"
 #include "stdio.h"
 
-// CLEAR SCREEN MODULE
+int i1;
+int i2;
+int count;
+int len;
+char out[1024];
+
+// CLEAR SCREEN COMMAND / MODULE
 void clear_mod() {
 	clear_screen(); // clear screen
 	mod_success = 1; // success
 	return;
 };
 
-// ABOUT MODULE
+// ABOUT COMMAND / MODULE
 void about() {
 	printf("electron is an open source, unlicensed kernel. Type 'freedom', for knowledge on free software. "); // about
 	mod_success = 1; // module successful!
 	return;
 };
 
-// SHUTDOWN MODULE
+// SHUTDOWN COMMAND / MODULE
 void shutdown() {
 	ALIVE = 1; // shutdown
 	mod_success = 1; // module successful!
 	return;
 };
 
+// FREEDOM COMMAND / MODULE
 void about_freedom() {
 	printf("electron is free software. There is no license in any way. Programs you use under the electron kernel, may have a separate license to electron; so check its license before use. ");
 	mod_success = 1;
 	return;
 };
 
+// EXTERNAL COMMAND HANDLER
 void handle_extern(int i) {
 	char about_chr[1024]    = "about";
 	char shutdown_chr[1024] = "shutdown";

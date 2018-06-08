@@ -10,3 +10,4 @@ void printc(const char *s, int color); // print data with color to VGA Text Buff
 void printf(const char *s); // print data to VGA Text Buffer
 void clear_screen(); // clear screen
 int strcmp(char s1[1024], char s2[1024]); // strcmp
+int strlen(char s[]);

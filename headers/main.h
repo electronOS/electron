@@ -11,9 +11,9 @@ extern void HANDLE_KEY_ASM(); // assembly key handler
 extern void WTP(unsigned short port, unsigned char data); // write port
 extern void IDT_LOAD(unsigned long *iptr); // load idt
 extern void handle_module(char command[1024]);
-int cmd_count=0; // command write location
-char HELP_STR[1024]="help"; // help string
-char KERN_STR[1024]="kernel"; // kernel string (for kernel info)
+int cmd_count = 0; // command write location
+char HELP_STR[1024] = "help"; // help string
+char KERN_STR[1024] = "kernel"; // kernel string (for kernel info)
 
 struct IDT_entry {
 	unsigned short int lower_bits;
