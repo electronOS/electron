@@ -171,5 +171,5 @@ void KERNEL() {
 	printc("electron", 0x02); // prompt
 	printc("# ", 0x04); // prompt
 
-	while(!ALIVE) {asm("hlt");}; // stay alive while alive
+	while(!ALIVE); // stay alive while alive
 };

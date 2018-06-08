@@ -5,6 +5,9 @@ void add_module(int port, inptr ptr) {
 	if (port > 131072) {
 		return; // implemented buffer overflow protection
 	};
+	if (is_mod_count > 131072) {
+		return; // implemented buffer overflow protection
+	};
 	modules[port] = ptr; // assign
 	is_mod[is_mod_count] = port; // assign
 	is_mod_count++; // increment counter

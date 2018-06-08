@@ -2,12 +2,6 @@
 #include "extern.h"
 #include "stdio.h"
 
-int i1;
-int i2;
-int count;
-int len;
-char out[1024];
-
 // CLEAR SCREEN COMMAND / MODULE
 void clear_mod() {
 	clear_screen(); // clear screen
