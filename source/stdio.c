@@ -11,6 +11,9 @@ void printf(const char *s) {
 			NEWLINE(); // newline
 			COUNT++; // increment
 		};
+		if (location >= 0xfa0) {
+			 return;
+		};
 		video[location++] = s[COUNT++]; // place character
 		video[location++] = 0x07; // place attributes
 	};
@@ -43,6 +46,9 @@ void printc(const char *s, int color) {
                         NEWLINE(); // newline
                         COUNT++; // increment
                 };
+                if (location > 0xfa0) {
+					return;
+				};
                 video[location++] = s[COUNT++]; // place character
                 video[location++] = color; // place attributes
         }
