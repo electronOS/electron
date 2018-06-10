@@ -25,10 +25,10 @@ void IDT_INIT() {
 	IDT[0x21].higher_bits = (keyboard_addr & 0xffff0000) >> 16; // IDT's higher bits
 
 	/*
-	 *            Ports
-	 *         PIC1   PIC2
+	 *			Ports
+	 *		 PIC1   PIC2
 	 * Command 0x20   0xA0
-	 * Data    0x21   0xA1
+	 * Data	0x21   0xA1
 	 */
 
 	// init ICW1
@@ -83,7 +83,7 @@ void handle_keyboard(int i) {
 		NEWLINE(); // newline
 	}
 	else if (strcmp(cmd, KERN_STR) == 0) {
-		printf("electron electronOS v0.0.6 15:57:03 EST June 2, 2018 electron/electronOS RELEASE"); // print kernel information
+		printf("electron electronOS 0.1.3 14:15:17 EST June 10, 2018 electron/electronOS RELEASE"); // print kernel information
 		NEWLINE(); // newline
 	}
 	else {
@@ -140,7 +140,7 @@ int SET_ALIVE(int i) {
 // BOOT MESSAGE
 void BOOT_MSG() {
 	NEWLINE(); // newline
-	printf("electron 0.1");
+	printf("electron 0.1.3");
 	NEWLINE(); // newline
 	return;
 };

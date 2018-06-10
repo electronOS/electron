@@ -4,9 +4,6 @@
 void printf(const char *s) {
 	unsigned int COUNT = 0; // counter
 	while (s[COUNT] != '\0') {
-		if (s[COUNT] == '\0') {
-			return;
-		};
 		if (s[COUNT] == '\n') {
 			NEWLINE(); // newline
 			COUNT++; // increment
@@ -38,21 +35,21 @@ int strlen(char s[]) {
 // PRINT WITH COLOR
 void printc(const char *s, int color) {
 	unsigned int COUNT = 0; // counter
-        while (s[COUNT] != '\0') {
-                if (s[COUNT] == '\0') {
-                        return; // EOL
-                };
-                if (s[COUNT] == '\n') {
-                        NEWLINE(); // newline
-                        COUNT++; // increment
-                };
-                if (location > 0xfa0) {
-					return;
-				};
-                video[location++] = s[COUNT++]; // place character
-                video[location++] = color; // place attributes
-        }
-        return;
+	while (s[COUNT] != '\0') {
+		if (s[COUNT] == '\0') {
+			return; // EOL
+		};
+		if (s[COUNT] == '\n') {
+			NEWLINE(); // newline
+			COUNT++; // increment
+		};
+		if (location > 0xfa0) {
+			return;
+		};
+		video[location++] = s[COUNT++]; // place character
+		video[location++] = color; // place attributes
+	}
+	return;
 };
 
 // CLEAR SCREEN
