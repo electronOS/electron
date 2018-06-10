@@ -141,7 +141,7 @@ int SET_ALIVE(int i) {
 // BOOT MESSAGE
 void BOOT_MSG() {
 	NEWLINE(); // newline
-	printf("electron v0.0.6");
+	printf("electron 0.1.1");
 	NEWLINE(); // newline
 	return;
 };
