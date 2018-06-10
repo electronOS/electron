@@ -118,7 +118,6 @@ void HANDLE_KEY() {
 			};
 			return;
 		};
-
 		cmd[cmd_count++] = key_map[(unsigned char) code]; // place in command
 		video[location++] = key_map[(unsigned char) code]; // place in video memory
 		video[location++] = 0x07; // attribute byte
@@ -141,7 +140,7 @@ int SET_ALIVE(int i) {
 // BOOT MESSAGE
 void BOOT_MSG() {
 	NEWLINE(); // newline
-	printf("electron 0.1.1");
+	printf("electron 0.1");
 	NEWLINE(); // newline
 	return;
 };

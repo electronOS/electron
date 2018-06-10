@@ -32,10 +32,10 @@ void about_freedom() {
 
 // EXTERNAL COMMAND HANDLER
 void handle_extern(int i) {
-	char about_chr[1024]    = "about";
-	char shutdown_chr[1024] = "shutdown";
-	char clear_chr[1024]    = "clear";
-	char freedom_chr[1024]  = "freedom";
+	const char about_chr[1024]    = "about";
+	const char shutdown_chr[1024] = "shutdown";
+	const char clear_chr[1024]    = "clear";
+	const char freedom_chr[1024]  = "freedom";
 	if (strcmp(cmd, about_chr) == 0) {
 		about();
 	}

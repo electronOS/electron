@@ -66,7 +66,7 @@ void clear_screen() {
 	return;
 };
 
-int strcmp(char s1[1024], char s2[1024]) {
+int strcmp(const char s1[1024], const char s2[1024]) {
 	while (*s2) {
 		if (*s1 != *s2) {
 			return 1;
