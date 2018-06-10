@@ -1,4 +1,4 @@
-unsigned char key_map[128] = {
+const unsigned char key_map[128] = {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8',
   '9', '0', '-', '=', '\b',
   '\t',
