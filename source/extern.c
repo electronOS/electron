@@ -169,8 +169,8 @@ void handle_extern(int i) {
 	const char clear_chr[1024]    = "clear";
 	const char freedom_chr[1024]  = "freedom";
 	const char add_chr[1024]      = "add";
-	const char sub_chr[1024]      = "sub";
-	const char mlt_chr[1024]      = "mlt";
+	const char sub_chr[1024]      = "subtract";
+	const char mlt_chr[1024]      = "multiply";
 	if (strcmp(cmd, about_chr) == 0) {
 		about();
 	}
