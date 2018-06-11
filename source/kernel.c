@@ -28,7 +28,7 @@ void IDT_INIT() {
 	 *			Ports
 	 *		 PIC1   PIC2
 	 * Command 0x20   0xA0
-	 * Data	0x21   0xA1
+	 * Data	   0x21   0xA1
 	 */
 
 	// init ICW1
@@ -154,14 +154,16 @@ void KERNEL() {
     ___| | ___  ___| |_ _ __ ___  _ __\n\
    / _ | |/ _ \\/ __| __| '__/ _ \\| '_ \\\n\
   |  __| |  __| (__| |_| | | (_) | | | |\n\
-   \\___|_|\\___|\\___|\\__|_|  \\___/|_| |_|\n"); // boot message
+   \\___|_|\\___|\\___|\\__|_|  \\___/|_| |_|"); // boot message
+	NEWLINE();
 
 	for (int j; j < 131072; j++) {
 		modules[j] = &DUMMY; // set pointer
 	};
 
 	STARTUP(); // startup code, add your own C
-	printf("[KERNEL] initializing IDT\n"); // kernel messages
+	printf("[KERNEL] initializing IDT"); // kernel messages
+	NEWLINE();
 	IDT_INIT(); // initialize IDT
 	printf("[KERNEL] initializing keyboard"); // kernel messages
 	KEYBOARD_INIT(); // initialize keyboard
