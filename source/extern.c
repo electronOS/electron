@@ -162,6 +162,36 @@ void mlt() {
 	return;
 };
 
+void ls() {
+	const char about_ch[1024]     = "about";
+	const char shutdown_ch[1024]  = "shutdown";
+	const char clear_ch[1024]     = "clear";
+	const char freedom_ch[1024]   = "freedom";
+	const char add_ch[1024]       = "add";
+	const char sub_ch[1024]       = "subtract";
+	const char mlt_ch[1024]       = "multiply";
+	const char ls_ch[1024]        = "ls";
+	const char ls_def[1024];
+	const char *ls_ptr[1024];
+	for (int k; k < 1024; k++) {
+		ls_ptr[k] = &ls_def;
+	};
+	ls_ptr[0] = &about_ch;
+	ls_ptr[1] = &shutdown_ch;
+	ls_ptr[2] = &clear_ch;
+	ls_ptr[3] = &freedom_ch;
+	ls_ptr[4] = &add_ch;
+	ls_ptr[5] = &sub_ch;
+	ls_ptr[6] = &mlt_ch;
+	ls_ptr[7] = &ls_ch;
+	for (int ls_c = 0; ls_c < 8; ls_c++) {
+		printf(ls_ptr[ls_c]);
+		printf(" ");
+	};
+	NEWLINE();
+	return;
+};
+
 // EXTERNAL COMMAND HANDLER
 void handle_extern(int i) {
 	const char about_chr[1024]    = "about";
@@ -171,6 +201,7 @@ void handle_extern(int i) {
 	const char add_chr[1024]      = "add";
 	const char sub_chr[1024]      = "subtract";
 	const char mlt_chr[1024]      = "multiply";
+	const char ls_chr[1024]       = "ls";
 	if (strcmp(cmd, about_chr) == 0) {
 		about();
 	}
@@ -191,6 +222,9 @@ void handle_extern(int i) {
 	}
 	else if (strcmp(cmd, mlt_chr) == 0) {
 		mlt();
+	}
+	else if (strcmp(cmd, ls_chr) == 0) {
+		ls();
 	}
 	else {
 		printf("electron: unknown command\n");

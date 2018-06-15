@@ -55,7 +55,7 @@ void IDT_INIT() {
 	// fill the IDT descriptor
 	idt_addr = (unsigned long) IDT;
 	iptr[0] = (sizeof (struct IDT_entry) * IDT_SIZE) + ((idt_addr & 0xffff) << 16);
-	iptr[1] = idt_addr >> 16 ;
+	iptr[1] = idt_addr >> 16;
 
 	IDT_LOAD(iptr); // load IDT
 	return;
@@ -79,11 +79,11 @@ int DUMMY() {}; // dummy
 
 void handle_keyboard(int i) {
 	if (strcmp(cmd, HELP_STR) == 0) {
-		printf("help - this menu\nkernel - kernel info"); // print help menu
+		printf("help        - this menu\nkernel      - kernel info\nls          - list available programs"); // print help menu
 		NEWLINE(); // newline
 	}
 	else if (strcmp(cmd, KERN_STR) == 0) {
-		printf("electron electronOS 0.1.4 10:28:06 EST June 11, 2018 electron/electronOS RELEASE"); // print kernel information
+		printf("electron electronOS 0.2.0 Jun 15 14:38:43 EDT 2018 electron/electronOS RELEASE"); // print kernel information
 		NEWLINE(); // newline
 	}
 	else {
@@ -140,7 +140,7 @@ int SET_ALIVE(int i) {
 // BOOT MESSAGE
 void BOOT_MSG() {
 	NEWLINE(); // newline
-	printf("electron 0.1.4");
+	printf("electron 0.2.0");
 	NEWLINE(); // newline
 	return;
 };
