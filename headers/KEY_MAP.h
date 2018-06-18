@@ -1,3 +1,10 @@
+/*
+ * electronOS by iH8Ra1n.
+ * NO WARRANTY OR LICENSE IN ANY WAY.
+ * created in 2018.
+ * ASSUME ALL FILES WERE CREATED BY IH8RA1N UNLESS STATED OTHERWISE! 
+ */
+
 const unsigned char key_map[128] = {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8',
   '9', '0', '-', '=', '\b',
