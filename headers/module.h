@@ -1,3 +1,10 @@
+/*
+ * electronOS by iH8Ra1n.
+ * NO WARRANTY OR LICENSE IN ANY WAY.
+ * created in 2018.
+ * ASSUME ALL FILES WERE CREATED BY IH8RA1N UNLESS STATED OTHERWISE! 
+ */
+
 typedef (*inptr)(int); // for modules
 inptr *modules = (inptr*) 0xf00000; // modules
 
