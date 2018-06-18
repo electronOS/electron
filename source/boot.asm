@@ -1,3 +1,8 @@
+; electronOS by iH8Ra1n.
+; NO WARRANTY OR LICENSE IN ANY WAY.
+; created in 2018.
+; ASSUME ALL FILES WERE CREATED BY IH8RA1N UNLESS STATED OTHERWISE! 
+
 bits 32
 section .text
 	align 4
