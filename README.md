@@ -29,3 +29,8 @@ After this, the module can be called with `run_module(_PORT, _ARG)`, where `_POR
 # LICENSE
 
 electron is not licensed, and you cannot license it. 
+
+# THANKS TO
+
+@iHateRa1n - many security bugs. 
+@th0ex     - 1 security bug, arbitrary write to kernel memory. 
