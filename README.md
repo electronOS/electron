@@ -32,5 +32,6 @@ electron is not licensed, and you cannot license it.
 
 # THANKS TO
 
-@iHateRa1n - many security bugs. 
-@tbiancostuff     - 1 security bug, arbitrary write to kernel memory. 
+[@iHateRa1n](https://www.github.com/iHateRa1n) - many security bugs. 
+
+[@tbiancostuff](https://www.github.com/tbiancostuff)     - 1 security bug, arbitrary write to kernel memory. 
