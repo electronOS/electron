@@ -1,18 +1,21 @@
 MODULES
-Modules are snippets of code that can be inserted into the kernel, to run in the elecSH shell, or in other programs. 
+Modules are snippets of code that can be inserted into the kernel, to run in other programs. 
 Note that module ports >= 65536 are reserved for the kernel. 
 Here is an example of a kernel module. 
-| BEGIN MODULE |
+
 void module(int null) {
 	printf("elecSH demo module\n");
 	mod_success = 1;
 	return;
 };
-| END MODULE |
-| BEGIN INSERTION CODE |
-add_module('m', &module);
-| END INSERTION CODE |
+
+INSERTING A MODULE
+add_module(1337, &module);
+
+RUNNING A MODULE
+run_module(1337, 0);
 
 EXPLANATION
 The module code itself, is in MODULE. You can paste this into a C file, and compile it with -m32, and output a .O file, into tmp (make sure you mkdir tmp! ), and when you run build.sh, it will link this into the kernel. 
 Make sure you edit the kernel with the INSERTION CODE, and also use the latest commit! 
+To run the module, run "run_module(1337, 0);" for this example. 
