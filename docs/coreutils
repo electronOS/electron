@@ -2,7 +2,13 @@ COREUTILS
 coreutils is a package included with the default electron kernel. 
 
 COMMANDS
+help      - similar menu to this document
+kernel    - kernel info
 about     - about electron
-freedom   - about free software
 shutdown  - shutdown electron
-clear     - clear VGA / screen. 
+clear     - clear VGA / screen.
+freedom   - about free software
+add       - add 2 numbers
+subtract  - subtract 2 numbers
+multiply  - multiply 2 numbers
+ls        - list all available commands
