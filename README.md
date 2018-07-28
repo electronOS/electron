@@ -18,8 +18,6 @@ The kernel, is in `KERNEL`. It calls many other functions, like `BOOT_MSG` (a bo
 
 The kernel is based upon modules.
 
-Programs, are modules; they are added into the kernel at compilation.
-
 You can use `add_module(_PORT, _POINTER)` to add a module.
 
 Where `_PORT` is the port you wish to place this module at, and `_POINTER` is a pointer to a function that takes an `int` as an argument, and returns `void`.
