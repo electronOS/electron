@@ -88,11 +88,15 @@ void add_handle() {
 	};
 	char a1[512];
 	for (int j = 0; j < k; j++) {
-		a1[j] = cmd[j];
+        	if (k < 512) {
+        	        a1[j] = cmd[j];
+        	};
 	};
 	char a2[512];
 	for (int j = 0; j < k; j++) {
-		a2[j] = cmd[j + k + 1];
+        	if (k < 512) {
+        	        a2[j] = cmd[j + k + 1];
+        	};
 	};
 	int i1;
 	int i2;
@@ -118,11 +122,15 @@ void sub_handle() {
 	};
 	char a1[512];
 	for (int j = 0; j < k; j++) {
-		a1[j] = cmd[j];
+      		if (k < 512) {
+        		a1[j] = cmd[j];
+        	};
 	};
 	char a2[512];
 	for (int j = 0; j < k; j++) {
-		a2[j] = cmd[j + k + 1];
+        	if (k < 512) {
+        		a2[j] = cmd[j + k + 1];
+        	};
 	};
 	int i1;
 	int i2;
@@ -148,11 +156,15 @@ void mlt_handle() {
 	};
 	char a1[512];
 	for (int j = 0; j < k; j++) {
-		a1[j] = cmd[j];
+		if (k < 512) {
+        		a1[j] = cmd[j];
+        	};
 	};
 	char a2[512];
 	for (int j = 0; j < k; j++) {
-		a2[j] = cmd[j + k + 1];
+		if (k < 512) {
+        		a2[j] = cmd[j + k + 1];
+        	};
 	};
 	int i1;
 	int i2;
@@ -193,9 +205,8 @@ void ls() {
 	ls_ptr[7] = &ls_ch;
 	for (int ls_c = 0; ls_c < 8; ls_c++) {
 		printf(ls_ptr[ls_c]);
-		printf(" ");
+        	NEWLINE();
 	};
-	NEWLINE();
 	return;
 };
 
